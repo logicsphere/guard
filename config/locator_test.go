@@ -14,6 +14,8 @@ func TestDetectEnvironment(t *testing.T) {
 	switch os.Getenv("TEST_RUNTIME") {
 	case "AWS":
 		expected = AwsEnv
+	case "GCP":
+		expected = GcpEnv
 	default:
 		expected = StdEnv
 	}
