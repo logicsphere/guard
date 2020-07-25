@@ -1,25 +1,26 @@
 package config
 
-import (
-  "github.com/aws/aws-sdk-go/aws/session"
-)
+import "net/http"
 
 type EnvironemtType string
 
 const (
-  AwsEnv EnvironemtType = "AWS"
-  GcpEnv EnvironemtType = "GCP"
-  K8sEnv EnvironemtType = "K8S"
-  StdEnv EnvironemtType = "Standard"
+	AwsEnv EnvironemtType = "AWS"
+	GcpEnv EnvironemtType = "GCP"
+	K8sEnv EnvironemtType = "K8S"
+	StdEnv EnvironemtType = "Standard"
 )
 
 func DetectEnvironment() EnvironemtType {
 
-  _, err := session.NewSession()
+	if checkAwsEnvironment() {
+		return AwsEnv
+	}
 
-  if err != nil {
-    return AwsEnv
-  }
+	return StdEnv
+}
 
-  return StdEnv
+func checkAwsEnvironment() bool {
+	_, err := http.Get("http://169.254.169.254/latest/dynamic/instance-identity/document")
+	return err == nil
 }
